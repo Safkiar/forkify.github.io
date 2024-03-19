@@ -10,6 +10,8 @@ export default class View {
     const markup = this._generateMarkup();
     this._clear();
     this._parentElement.insertAdjacentHTML(`afterbegin`, markup);
+
+    console.log(data, 'halo');
   }
 
   _clear() {
