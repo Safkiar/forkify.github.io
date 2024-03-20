@@ -17,11 +17,15 @@ import { async } from 'regenerator-runtime';
 const controlRecipes = async function () {
   try {
     const id = window.location.hash.slice(1);
+
     console.log('first step: taking ID from hash', id); // c1
 
     if (!id) return;
 
     recipeView.renderSpinner();
+
+    resultsView.update(model.getSearchResultsPage());
+
     // loading recipe
     await model.loadRecipe(id);
 
@@ -41,7 +45,7 @@ const controlSearchResults = async function () {
 
     await model.loadSearchResults(query);
 
-    resultsView.render(model.getSerchResultsPage());
+    resultsView.render(model.getSearchResultsPage());
 
     paginationView.render(model.state.search);
   } catch (err) {
@@ -50,12 +54,21 @@ const controlSearchResults = async function () {
 };
 
 const controlPagination = function (goToPage) {
-  resultsView.render(model.getSerchResultsPage(goToPage));
+  resultsView.render(model.getSearchResultsPage(goToPage));
   paginationView.render(model.state.search);
+};
+
+const controlServings = function (newServings) {
+  // Update the recipe servings (in state)
+  model.updateServings(newServings);
+  // Update the recipe view
+  // recipeView.render(model.state.recipe);
+  recipeView.update(model.state.recipe);
 };
 
 const init = function () {
   recipeView.addHandlerRender(controlRecipes);
+  recipeView.addHandlerUpdateServings(controlServings);
   searchView.addHandlerSearch(controlSearchResults);
   paginationView.addHandlerClick(controlPagination);
 };
