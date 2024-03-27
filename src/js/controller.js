@@ -76,8 +76,10 @@ const controlAddBookmark = function () {
   if (!model.state.recipe.bookmarked) model.addBookmark(model.state.recipe);
   else model.deleteBookmark(model.state.recipe.id);
 
+  // 2) Update recipe view
   recipeView.update(model.state.recipe);
 
+  // 3) Render bookmarks
   bookmarksView.render(model.state.bookmarks);
 };
 
@@ -94,6 +96,10 @@ const controlAddRecipe = async function (newRecipe) {
     recipeView.render(model.state.recipe);
 
     addRecipeView.renderMessage();
+
+    bookmarksView.render(model.state.bookmarks);
+
+    window.history.pushState(null, '', `#${model.state.recipe.id}`);
 
     setTimeout(function () {
       addRecipeView.toggleWindow();
